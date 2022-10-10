@@ -14,7 +14,7 @@
 # To use this script, download the latest copy from github and run it as
 # root on the system where you want to install FPP:
 #
-# wget -O ./FPP_Install.sh https://raw.githubusercontent.com/FalconChristmas/fpp/master/SD/FPP_Install.sh
+# wget -O ./FPP_Install.sh https://raw.githubusercontent.com/CaffeinatedFunctionality/fpp/master/SD/FPP_Install.sh
 # chmod 700 ./FPP_Install.sh
 # su
 # ./FPP_Install.sh
@@ -500,7 +500,7 @@ case "${OSVER}" in
             if [ ! -f /etc/systemd/network/50-default.network ]; then
                 # Need to make sure there is configuration for eth0 or no connection will be
                 # setup after a reboot
-                wget -O /etc/systemd/network/50-default.network https://raw.githubusercontent.com/FalconChristmas/fpp/master/etc/systemd/network/50-default.network
+                wget -O /etc/systemd/network/50-default.network https://raw.githubusercontent.com/CaffeinatedFunctionality/fpp/master/etc/systemd/network/50-default.network
             fi
             # make sure we end up with eth0/wlan0 instead of enx#### wlx#### naming for now
             ln -s /dev/null /etc/systemd/network/99-default.link
@@ -828,7 +828,7 @@ if $clone_fpp; then
     fi
 
     echo "FPP - Cloning git repository into /opt/fpp"
-    git clone https://github.com/FalconChristmas/fpp fpp
+    git clone https://github.com/CaffeinatedFunctionality/fpp fpp
     cd fpp
     git config pull.rebase true
 fi
