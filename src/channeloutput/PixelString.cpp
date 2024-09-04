@@ -624,6 +624,7 @@ void PixelString::invertOutput() {
 void PixelString::AutoCreateOverlayModels(const std::vector<PixelString*>& strings) {
     if (PixelOverlayManager::INSTANCE.isAutoCreatePixelOverlayModels()) {
         std::map<std::string, std::vector<VirtualString*>> vstrings;
+        FPPColorOrder colorOrder = FPPColorOrder::kColorOrderRGB;
         for (int s = 0; s < strings.size(); s++) {
             char vsnum = 'A';
             int vsidx = 0;
@@ -677,6 +678,7 @@ void PixelString::AutoCreateOverlayModels(const std::vector<PixelString*>& strin
             int8_t rn = -1;
             for (auto& a : vs) {
                 if (a) {
+                    colorOrder = a->colorOrder;
                     startChannel = std::min(startChannel, (uint32_t)a->startChannel);
                     maxChan = a->startChannel + (a->pixelCount * a->channelsPerNode() / (a->groupCount ? a->groupCount : 1));
                     channelsPerNode = std::max(channelsPerNode, (uint32_t)a->channelsPerNode());
@@ -694,7 +696,7 @@ void PixelString::AutoCreateOverlayModels(const std::vector<PixelString*>& strin
 
             if ((channelCount > 0) && (rn == -1)) {
                 PixelOverlayManager::INSTANCE.addAutoOverlayModel(name, startChannel, channelCount, channelsPerNode, orientation,
-                                                                  startLocation, strings, strands);
+                                                                  startLocation, strings, strands, colorOrder);
             }
         }
     }

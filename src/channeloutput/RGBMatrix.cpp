@@ -265,7 +265,7 @@ int RGBMatrixOutput::Init(Json::Value config) {
         PixelOverlayManager::INSTANCE.addAutoOverlayModel(desc,
                                                           m_startChannel, m_channelCount, 3,
                                                           "H", m_invertedData ? "BL" : "TL",
-                                                          m_height, 1);
+                                                          m_height, 1, m_colorOrder);
     }
     return ChannelOutput::Init(config);
 }

@@ -60,6 +60,8 @@ FBMatrixOutput::~FBMatrixOutput() {
 int FBMatrixOutput::Init(Json::Value config) {
     LogDebug(VB_CHANNELOUT, "FBMatrixOutput::Init()\n");
 
+    m_colorOrder = ColorOrderFromString(config["colorOrder"].asString());
+
     if (config.isMember("modelName"))
         modelName = config["modelName"].asString();
 
@@ -149,7 +151,7 @@ int FBMatrixOutput::Init(Json::Value config) {
         PixelOverlayManager::INSTANCE.addAutoOverlayModel(desc,
                                                           m_startChannel, m_channelCount, 3,
                                                           "H", "TL",
-                                                          height, 1);
+                                                          height, 1, m_colorOrder);
     }
     return ChannelOutput::Init(config);
 }

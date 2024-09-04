@@ -1002,7 +1002,7 @@ int BBBMatrix::Init(Json::Value config) {
         PixelOverlayManager::INSTANCE.addAutoOverlayModel(desc,
                                                           m_startChannel, m_channelCount, 3,
                                                           "H", m_invertedData ? "BL" : "TL",
-                                                          m_height, 1);
+                                                          m_height, 1, m_colorOrder);
     }
     // We need to send the data once to make sure the panels are cleared and "off"
     // However, this doesn't always work so we'll set everything slightly "on" first

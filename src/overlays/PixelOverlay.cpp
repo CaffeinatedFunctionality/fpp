@@ -845,9 +845,13 @@ public:
                 m->setState(PixelOverlayState(state));
             }
             unsigned int x = PixelOverlayManager::mapColor(color);
-            m->fillOverlayBuffer((x >> 16) & 0xFF,
-                                 (x >> 8) & 0xFF,
-                                 x & 0xFF);
+            FPPColorOrder colorOrder = m->getColorOrder();
+            uint8_t orderedColors[4];
+            orderedColors[colorOrder.redOffset()] = (x >> 16) & 0xFF;
+            orderedColors[colorOrder.greenOffset()] = (x >> 8) & 0xFF;
+            orderedColors[colorOrder.blueOffset()] = x & 0xFF;
+            orderedColors[3] = 0; // Assuming white is always last if present
+            m->fillOverlayBuffer(orderedColors[0], orderedColors[1], orderedColors[2], orderedColors[3]);
             m->flushOverlayBuffer();
         }
         return std::make_unique<Command::Result>("Models Filled");
@@ -946,7 +950,8 @@ void PixelOverlayManager::RegisterCommands() {
 void PixelOverlayManager::addAutoOverlayModel(const std::string& name,
                                               uint32_t startChannel, uint32_t channelCount, uint32_t channelPerNode,
                                               const std::string& orientation, const std::string& startLocation,
-                                              uint32_t strings, uint32_t strands) {
+                                              uint32_t strings, uint32_t strands,
+                                              FPPColorOrder colorOrder) {
     Json::Value val;
     val["Name"] = name;
     val["Type"] = "Channel";
