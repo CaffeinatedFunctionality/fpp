@@ -15,6 +15,7 @@
 #include <vector>
 
 #include "../commands/Commands.h"
+#include "../channeloutput/ColorOrder.h"
 
 class PixelOverlayModel;
 

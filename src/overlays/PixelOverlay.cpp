@@ -962,6 +962,7 @@ void PixelOverlayManager::addAutoOverlayModel(const std::string& name,
     val["Orientation"] = orientation;
     val["StartCorner"] = startLocation;
     val["ChannelCountPerNode"] = channelPerNode;
+    val["ColorOrder"] = colorOrder.toString();
     val["autoCreated"] = true;
 
     addModel(val);

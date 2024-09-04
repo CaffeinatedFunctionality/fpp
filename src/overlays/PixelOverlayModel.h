@@ -14,6 +14,7 @@
 #include <list>
 #include <mutex>
 #include <thread>
+#include "../channeloutput/ColorOrder.h"
 
 class RunningEffect;
 

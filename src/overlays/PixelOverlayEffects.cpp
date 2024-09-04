@@ -39,6 +39,7 @@
 #include "WLEDEffects.h"
 
 #include "PixelOverlayEffects.h"
+#include "../channeloutput/ColorOrder.h"
 
 static uint32_t applyColorPct(uint32_t c, float pct) {
     uint32_t r = (c >> 16) & 0xFF;

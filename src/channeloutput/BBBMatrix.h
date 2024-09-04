@@ -18,6 +18,7 @@
 #include "util/BBBPruUtils.h"
 
 #include "ChannelOutput.h"
+#include "ColorOrder.h"
 
 // 16 rows (1/16 scan) * 8bits per row
 #define MAX_STATS 16 * 8

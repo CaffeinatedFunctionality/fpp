@@ -19,6 +19,7 @@
 #include <mutex>
 #include <string>
 #include <thread>
+#include "../channeloutput/ColorOrder.h"
 
 class PixelOverlayState;
 class PixelOverlayModel;
@@ -47,7 +48,7 @@ public:
     void addAutoOverlayModel(const std::string& name,
                              uint32_t startChannel, uint32_t channelCount, uint32_t channelsPerNode,
                              const std::string& orientation, const std::string& startLocation,
-                             uint32_t strings, uint32_t strands);
+                             uint32_t strings, uint32_t strands, FPPColorOrder colorOrder);
 
     const std::string& mapFont(const std::string& f);
     static uint32_t mapColor(const std::string& c);
