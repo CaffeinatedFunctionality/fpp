@@ -851,7 +851,7 @@ public:
             orderedColors[colorOrder.greenOffset()] = (x >> 8) & 0xFF;
             orderedColors[colorOrder.blueOffset()] = x & 0xFF;
             orderedColors[3] = 0; // Assuming white is always last if present
-            m->fillOverlayBuffer(orderedColors[0], orderedColors[1], orderedColors[2], orderedColors[3]);
+            m->fillOverlayBuffer(orderedColors[0], orderedColors[1], orderedColors[2]);
             m->flushOverlayBuffer();
         }
         return std::make_unique<Command::Result>("Models Filled");
@@ -962,7 +962,7 @@ void PixelOverlayManager::addAutoOverlayModel(const std::string& name,
     val["Orientation"] = orientation;
     val["StartCorner"] = startLocation;
     val["ChannelCountPerNode"] = channelPerNode;
-    val["ColorOrder"] = colorOrder.toString();
+    val["ColorOrder"] = ColorOrderToString(colorOrder);
     val["autoCreated"] = true;
 
     addModel(val);
