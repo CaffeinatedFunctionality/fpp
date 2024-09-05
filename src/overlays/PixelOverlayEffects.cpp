@@ -773,13 +773,11 @@ void PixelOverlayEffect::setPixelColor(int x, int y, uint32_t color) {
     uint8_t r = (color >> 16) & 0xFF;
     uint8_t g = (color >> 8) & 0xFF;
     uint8_t b = color & 0xFF;
-    uint8_t w = (color >> 24) & 0xFF;
 
     uint8_t orderedColors[4];
     orderedColors[colorOrder.redOffset()] = r;
     orderedColors[colorOrder.greenOffset()] = g;
     orderedColors[colorOrder.blueOffset()] = b;
-    orderedColors[3] = w;  // Assuming white is always last if present
 
-    model->setOverlayPixelValue(x, y, orderedColors[0], orderedColors[1], orderedColors[2], orderedColors[3]);
+    model->setOverlayPixelValue(x, y, orderedColors[0], orderedColors[1], orderedColors[2]);
 }

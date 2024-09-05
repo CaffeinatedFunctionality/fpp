@@ -56,4 +56,6 @@ public:
 
     static void AddPixelOverlayEffect(PixelOverlayEffect* effect);
     static void RemovePixelOverlayEffect(PixelOverlayEffect* effect);
+protected:
+    void setPixelColor(int x, int y, uint32_t color);
 };
