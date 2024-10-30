@@ -4,42 +4,37 @@
 . /opt/fpp/scripts/functions
 
 check_wifi() {
-    # Get tether interface
-    TetherInterface=$(FindTetherWIFIAdapater)
+    # Let MaybeEnableTethering handle tethering logic
+    TetherEnabled=$(getSetting EnableTethering)
+    if [ "x${TetherEnabled}" == "x" ]; then
+        TetherEnabled=0
+    fi
     
-    # Check if tethering is currently enabled
-    if [ -f /etc/hostapd/hostapd.conf ]; then
-        # Get configured SSID from interface file
-        CONFIGS=$(ls ${FPPHOME}/media/config/interface.w*)
-        for f in $CONFIGS; do
-            unset SSID
-            . ${f}
-            if [ ! -z "$SSID" ]; then
-                # Check if configured network is available
-                SCAN=$(iwlist ${TetherInterface} scan 2>/dev/null | grep "ESSID:\"${SSID}\"")
-                if [ ! -z "$SCAN" ]; then
-                    echo "Found configured network ${SSID}, disabling tethering and connecting..."
-                    
-                    # Stop hostapd
-                    systemctl stop hostapd
-                    
-                    # Reconfigure network
-                    SetupFPPNetworkConfig
-                    
-                    # Wait for connection
-                    sleep 5
-                    
-                    # Verify connection
-                    if ! iwconfig ${TetherInterface} 2>/dev/null | grep -q "ESSID:\"${SSID}\""; then
-                        echo "Failed to connect to ${SSID}, re-enabling tethering..."
-                        MaybeEnableTethering
+    # Only proceed if tethering isn't disabled (state 2)
+    if [ "$TetherEnabled" != "2" ]; then
+        MaybeEnableTethering
+        
+        # Scan for configured networks if in tethering mode
+        if [ -f /etc/hostapd/hostapd.conf ]; then
+            TetherInterface=$(FindTetherWIFIAdapater)
+            CONFIGS=$(ls ${FPPHOME}/media/config/interface.w* 2>/dev/null)
+            for f in $CONFIGS; do
+                unset SSID
+                . ${f}
+                if [ ! -z "$SSID" ]; then
+                    SCAN=$(iwlist ${TetherInterface} scan 2>/dev/null | grep "ESSID:\"${SSID}\"")
+                    if [ ! -z "$SCAN" ]; then
+                        echo "Found configured network ${SSID}, attempting to connect..."
+                        SetupFPPNetworkConfig
+                        break
                     fi
                 fi
-            fi
-        done
+            done
+        fi
     fi
 }
 
+# Main loop
 while true; do
     check_wifi
     sleep 30
