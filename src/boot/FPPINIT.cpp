@@ -23,6 +23,7 @@
 #include <unistd.h>
 
 #include <filesystem>
+#include <fstream>
 #include <iomanip>
 #include <string>
 #include <thread>
@@ -1238,6 +1239,40 @@ static void setupChannelOutputs() {
 #endif
 }
 
+static void setupWiFiMonitor() {
+    const std::string serviceFile = "/etc/systemd/system/fpp-wifi-monitor.service";
+    const std::string monitorScript = "/opt/fpp/scripts/wifi_monitor.sh";
+    
+    // Only proceed if the monitor script exists
+    if (!FileExists(monitorScript)) {
+        return;
+    }
+
+    // Create/update service file
+    std::string serviceContent = 
+        "[Unit]\n"
+        "Description=FPP WiFi Network Monitor\n"
+        "After=network.target\n"
+        "\n"
+        "[Service]\n"
+        "Type=simple\n"
+        "ExecStart=/opt/fpp/scripts/wifi_monitor.sh\n"
+        "Restart=always\n"
+        "\n"
+        "[Install]\n"
+        "WantedBy=multi-user.target\n";
+
+    PutFileContents(serviceFile, serviceContent);
+
+    // Set correct permissions
+    chmod(monitorScript.c_str(), S_IRWXU | S_IRGRP | S_IXGRP | S_IROTH | S_IXOTH);
+
+    // Enable and start the service
+    execbg("systemctl daemon-reload");
+    execbg("systemctl enable fpp-wifi-monitor.service");
+    execbg("systemctl restart fpp-wifi-monitor.service");
+}
+
 int main(int argc, char* argv[]) {
     std::string networkSetupMut = FPP_MEDIA_DIR + "/tmp/networkSetup";
     std::string action = "start";
@@ -1311,6 +1346,7 @@ int main(int argc, char* argv[]) {
         if (!FileExists("/etc/fpp/desktop")) {
             maybeEnableTethering();
             detectNetworkModules();
+            setupWiFiMonitor();
         }
         setupTimezone(); // this may not have worked in the init phase, try again
         detectFalconHardware();
