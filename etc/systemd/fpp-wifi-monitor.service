@@ -1,0 +1,11 @@
+[Unit]
+Description=FPP WiFi Network Monitor
+After=network.target
+
+[Service]
+Type=simple
+ExecStart=/opt/fpp/scripts/wifi_monitor
+Restart=always
+
+[Install]
+WantedBy=multi-user.target
