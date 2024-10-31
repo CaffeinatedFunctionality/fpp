@@ -12,10 +12,16 @@ check_wifi() {
     
     # Only proceed if tethering isn't disabled (state 2)
     if [ "$TetherEnabled" != "2" ]; then
-        MaybeEnableTethering
+        # Check if we have a connection
+        IPS="$(ip -o -4 addr | grep -v usb | grep -v 127.0 | grep -v 'wlan. *inet 192.168.8.1')"
         
-        # Scan for configured networks if in tethering mode
-        if [ -f /etc/hostapd/hostapd.conf ]; then
+        if [ -z "$IPS" ]; then
+            # No connection, let MaybeEnableTethering handle it
+            MaybeEnableTethering
+        fi
+        
+        # If in tethering mode or no connection, scan for configured networks
+        if [ -f /etc/hostapd/hostapd.conf ] || [ -z "$IPS" ]; then
             TetherInterface=$(FindTetherWIFIAdapater)
             CONFIGS=$(ls ${FPPHOME}/media/config/interface.w* 2>/dev/null)
             for f in $CONFIGS; do
